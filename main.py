@@ -32,23 +32,27 @@ class Kasada():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
-
-            self.player.a[1] = 1
-            if pygame.sprite.collide_mask(self.ship.collide, self.player):
+            if pygame.sprite.collide_mask(self.ship.outer, self.player):
+                self.ship.outer.visible = 0
+                self.player.a[1] = 1
+            else:
+                self.ship.outer.visible = 1
                 self.player.a[1] = 0
-                self.player.v[1] = 0
-
             pressed = pygame.key.get_pressed()
-            if pressed[pygame.K_UP]: self.player.r[1] -= 2
-            if pressed[pygame.K_DOWN]: self.player.r[1] += 2
-            if pressed[pygame.K_LEFT]: self.player.r[0] -= 2
-            if pressed[pygame.K_RIGHT]: self.player.r[0] += 2
+            if pressed[pygame.K_UP]: self.player.v[1] -= 1
+            if pressed[pygame.K_DOWN]: self.player.v[1] += 1
+            if pressed[pygame.K_LEFT]: self.player.v[0] -= 1
+            if pressed[pygame.K_RIGHT]: self.player.v[0] += 1
             self.player.update_vects()
+            if self.player.ship_collide(self.ship):
+                self.player.a[0] = 0
+                self.player.a[1] = 0
+                self.player.v[0] = 0
+                self.player.v[1] = 0
             self.ship.set_rect()
 
             pygame.display.flip()
-
-            clock.tick(120)
+            clock.tick(60)
 
 
 test = Kasada()
